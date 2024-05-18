@@ -1,5 +1,5 @@
 import { User } from "../../users/entities/user.entity";
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, UpdateDateColumn } from "typeorm";
 import { Message } from "./message.entity";
 
 
@@ -10,6 +10,7 @@ export enum ChannelType {
 
 @Entity()
 export class Channel {
+    constructor(){}
     @PrimaryColumn()
     id : string
 

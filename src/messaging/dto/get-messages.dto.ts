@@ -4,6 +4,8 @@ import { MessageStatus } from "./mark-message.dto";
 export class GetMessagesDTO{
     @IsString()
     channelId : string
+
+    
     @IsOptional()
     @IsNumber()
     offset : number
@@ -23,5 +25,9 @@ export class GetMessagesDTO{
     @IsOptional()
     @IsEnum(MessageStatus)
     status : MessageStatus
+
+    @IsOptional()
+    @IsString()
+    id : string
     
 }

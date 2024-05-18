@@ -1,9 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete ,Request, UseGuards} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete ,Request, UseGuards, UseInterceptors, UploadedFile, Query} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { SignInDTO } from './dto/sign-in.dto';
 import { UpdateProfileDTO } from './dto/update-profile.dto';
 import { IsPublic, UserAuthGuard } from './services/auth-guard.service';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { UserFilter } from './dto/user-filter.dto';
 @Controller('users')
 @UseGuards(UserAuthGuard)
 export class UsersController {
@@ -31,6 +33,19 @@ export class UsersController {
   async updateProfile( @Body() updateUserDto: UpdateProfileDTO,@Request() request) {
  const result = await this.usersService.updateProfile(request['user'].sub,updateUserDto);
  return result;
+  }
+
+  @Patch('update-profile-picture')
+  @UseInterceptors(FileInterceptor('file'))
+  async updateProfilePicture(@Request() request,@UploadedFile() file : Express.Multer.File) {
+    const result = await this.usersService.updateProfilePicture(request['user'].sub, file.buffer,file.mimetype);
+    return result;
+  }
+  @Get()
+  async getUsers(@Query() filter : UserFilter,@Request() request){
+    const result = await this.usersService.getUsers(request['user'].sub,filter);
+    return result;
+  
   }
 
 

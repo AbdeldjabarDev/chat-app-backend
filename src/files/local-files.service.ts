@@ -4,9 +4,9 @@ import { DataFile } from './entities/file.entity';
 import { Repository } from 'typeorm';
 import { FILE_SIZE_LIMIT } from './constants';
 import { ulid } from 'ulid';
-import { IFileService } from './interfaces/files.service.interface';
+import { IFilesService } from './interfaces/files.service.interface';
 @Injectable()
-export class FilesService implements IFileService {
+export class FilesService implements IFilesService {
     constructor(
     @InjectRepository(DataFile) 
     private fileRepository : Repository<DataFile>) {}

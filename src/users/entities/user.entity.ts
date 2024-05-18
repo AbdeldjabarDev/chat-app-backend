@@ -1,6 +1,6 @@
-import { Channel } from "../../messaging/entities/channel.entity"
-import { Message } from "src/messaging/entities/message.entity";
-import { Column, Entity, ManyToMany, OneToMany, PrimaryColumn } from "typeorm";
+import  {Channel}  from "../../messaging/entities/channel.entity"
+import { Message } from "../../messaging/entities/message.entity";
+import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryColumn } from "typeorm";
 
 @Entity()
 export class User {
@@ -17,13 +17,18 @@ export class User {
     @Column()
     password : string
 
-    @Column()
+    @Column({
+        nullable : true
+    })
     profilePicture : string
 
     @OneToMany(() => Message, (message) => message.sender)
     messages : Message[]
 
     @ManyToMany(() => Channel, (channel) => channel.users)
+    @JoinTable({
+        name : 'user_channels'
+    })
     channels : Channel[]
 
     @OneToMany(() => Channel, (channel) => channel.owner)

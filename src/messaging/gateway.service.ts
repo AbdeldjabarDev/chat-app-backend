@@ -9,8 +9,12 @@ import {
   } from '@nestjs/websockets';
 import { IncomingMessage } from 'http';
 import {Server,WebSocket} from 'ws'
+export enum EventType{
+    MESSAGE = 'message',
+    CLIENT_CONNECTED = 'client_connected'
+}
 export interface Event{
-    type : string,
+    type : EventType,
     data : any
 }
   
@@ -53,25 +57,30 @@ export interface Event{
       
       
     }
-    notifyUser(userId: string,ev : Event) {
-        const client = this.connectedUsers.get(userId);
-        console.log("notifiying user with id : ",userId);
-        
-        if(client)
-        {
-            console.log("user with id : ",userId,"notified");
-            
-            client.send(JSON.stringify(ev));
+    notifyUser(userIds: string[],ev : Event) {
+  
+        for(const userId of userIds){
+            const client = this.connectedUsers.get(userId);
+            if(client)
+            {
+                console.log("user with id : ", userId, "notified");
+
+                client.send(JSON.stringify(ev));
+
+            }
+            else
+            {
+                console.log("user not connected");
+            }
+
 
         }
-        else
-        {
-            console.log("user not connected");
         }
+       
         
     
 
-    }
+    
     
    
   

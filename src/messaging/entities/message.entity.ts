@@ -1,7 +1,7 @@
 import { User } from "../../users/entities/user.entity";
 import { MessageStatus } from "../dto/mark-message.dto";
-import { Channel } from "./channel.entity";
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToMany, ManyToOne, OneToOne, PrimaryColumn, UpdateDateColumn } from "typeorm";
+import  {Channel}  from "./channel.entity";
+import { Column, CreateDateColumn, Entity, Index, JoinColumn, ManyToMany, ManyToOne, OneToOne, PrimaryColumn, UpdateDateColumn } from "typeorm";
 import { MessageType } from "../dto/send-message.dto";
 
 @Entity()
@@ -12,7 +12,7 @@ export class Message {
     @Column()
     content: string;   
     
-   
+    @Index()
     @ManyToOne(() => Channel, (channel) => channel.messages)
     channel : Channel;
     

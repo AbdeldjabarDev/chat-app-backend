@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request } from '@nestjs/common';
 import { MessagingService } from './messaging.service';
 import { CreateChannelDTO } from './dto/create-channel.dto';
-import { UserAuthGuard } from 'src/users/users.guard';
+import { UserAuthGuard } from '../users/services/auth-guard.service';
 import { SendMessageDTO } from './dto/send-message.dto';
 import { GetMessagesDTO } from './dto/get-messages.dto';
 import { MarkMessageDTO } from './dto/mark-message.dto';

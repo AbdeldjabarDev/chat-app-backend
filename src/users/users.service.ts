@@ -3,11 +3,13 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateProfileDTO } from './dto/update-profile.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { IFilesService } from 'src/files/interfaces/files.service.interface';
 import * as bcrypt from 'bcrypt';
 import { SignInDTO } from './dto/sign-in.dto';
 import { JwtService } from '@nestjs/jwt';
+import { ulid } from 'ulid';
+import { UserFilter } from './dto/user-filter.dto';
 @Injectable()
 export class UsersService {
   @InjectRepository(User)
@@ -15,10 +17,11 @@ export class UsersService {
 
   @Inject('IFilesService')
    private readonly filesService: IFilesService;
-   
+
+   @Inject(JwtService)
    private readonly jwtService: JwtService;
   async signUp(createUserDto: CreateUserDto) {
-    const oldUser = this.userRepository.findOne({
+    const oldUser = await this.userRepository.findOne({
       where : {
         email : createUserDto.email
       }
@@ -27,6 +30,7 @@ export class UsersService {
     throw new ConflictException('User with this email already exists');
     const passwordHash = bcrypt.hashSync(createUserDto.password, 10);
     const user =  this.userRepository.create({
+      id : ulid(),
       email : createUserDto.email,
       password : passwordHash,
       name : createUserDto.name,
@@ -53,7 +57,8 @@ export class UsersService {
       name : user.name
     },
     {
-      secret : process.env.JWT_SECRET
+      secret : process.env.JWT_SECRET,
+      expiresIn : '7d'
     });
     if(token)
     return {
@@ -112,5 +117,21 @@ export class UsersService {
     if(!user)
     throw new NotFoundException('User with this id does not exist');
     return user;
+  }
+  async getUsers(uid: string,filter : UserFilter){
+    const users = await this.userRepository.find({
+      where : [{
+        email : Like(`%${filter.email}%`),
+        // name : Like(`%${filter.name}%`)
+      },{name  : Like(`%${filter.name}%`)}]
+    });
+    users.forEach(user => {
+      delete user.password;
+    });
+   
+    // if(!users)
+    // throw new NotFoundException('User with this id does not exist');
+    return  users.filter((user) => user.id !== uid);
+
   }
 }

@@ -10,20 +10,21 @@ import { MessagingService } from './messaging/messaging.service';
 import { MessagingModule } from './messaging/messaging.module';
 import { FilesService } from './files/local-files.service';
 import { FilesModule } from './files/files.module';
-import { DataFile } from './files/entities/file.entity';
-import { Channel } from './messaging/entities/channel.entity';
-import { DataSource } from 'typeorm';
 import 'dotenv/config';
 const POSTGRES_PORT = process.env.POSTGRES_PORT ;
 const POSTGRES_HOST = process.env.POSTGRES_HOST ;
 const POSTGRES_PASSWORD = process.env.POSTGRES_PASSWORD ;
 const POSTGRES_USER = process.env.POSTGRES_USER ;
 const POSTGRES_DB = process.env.POSTGRES_DB ;1
-const TOKEN_SECRET = process.env.TOKEN_SECRET;
-log(POSTGRES_PORT, POSTGRES_HOST, POSTGRES_PASSWORD, POSTGRES_USER,TOKEN_SECRET,POSTGRES_DB);
+export const JWT_SECRET = process.env.JWT_SECRET;
+log(POSTGRES_PORT, POSTGRES_HOST, POSTGRES_PASSWORD, POSTGRES_USER,POSTGRES_DB);
 import globalDataSource from '../db/dataSource';
 @Module({
-  imports: [TypeOrmModule.forRoot(globalDataSource.options), UsersModule, MessagingModule, FilesModule,
+  imports: [
+    TypeOrmModule.forRoot(globalDataSource.options),
+     UsersModule,
+      MessagingModule, 
+    FilesModule,
 ],
   controllers: [AppController],
   providers: [AppService],
